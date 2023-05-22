@@ -1,7 +1,7 @@
-import { legacy_createStore as createStore } from 'redux';
-import { composeWithDevTools } from '@redux-devtools/extension';
-import rootReducer from '../reducers';
+import { combineReducers } from 'redux';
 
-const store = createStore(rootReducer, composeWithDevTools());
+const rootReducer = combineReducers({
+  //os reducers vão aqui
+});
 
-export default store;
+export default rootReducer;
