@@ -25,13 +25,25 @@ class Login extends Component {
     }
   };
 
+  fetchTokenAPI = async () => {
+    const URL = 'https://opentdb.com/api_token.php?command=request';
+    const response = await fetch(URL);
+    const data = await response.json();
+    localStorage.setItem('token', (data.token));
+  };
+
   // função que redireciona a partir do botão play
   onClickButtonPlay = (event) => {
     event.preventDefault();
-    const { email } = this.state;
-    const { dispatch, history } = this.props;
-    dispatch(login({ email }));
+    this.fetchTokenAPI();
+
+    const { history } = this.props;
     history.push('/game');
+
+    // parte store, caso for utilizada
+  /*     const { email, name } = this.state;
+    const { dispatch } = this.props;
+    dispatch(login({ email, name })); */
   };
 
   // função que redireciona a partir do botão configuracoes
