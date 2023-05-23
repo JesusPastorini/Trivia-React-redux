@@ -27,7 +27,6 @@ class Questions extends Component {
       this.setState({ questions });
     } catch (error) {
       console.error('Erro ao carregar perguntas:', error);
-      this.logout();
     }
   };
 
