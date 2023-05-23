@@ -14,7 +14,7 @@ const mockPlayer = {
     name: 'José',
     assertions: 0,
     score: 0,
-    gravatarEmail: 'email@email.com',
+    email: 'email@email.com',
   },
 };
 
@@ -119,7 +119,7 @@ describe('Testa a tela de Login', () => {
         
     await waitFor(() => {
       console.log(store.getState());
-      expect(store.getState().player.gravatarEmail).toBe(validEmail)
+      expect(store.getState().player.email).toBe(validEmail)
     })
 
     await waitFor(() => {
