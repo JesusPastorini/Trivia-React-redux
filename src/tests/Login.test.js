@@ -4,7 +4,6 @@ import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { act } from "react-dom/test-utils";
 import mockToken from "./helpers/mockToken";
-import store from '../redux/store'
 
 const invalidEmail = 'teste.@teste.com';
 const validEmail = 'email@email.com';
@@ -15,8 +14,7 @@ const mockPlayer = {
     name: 'José',
     assertions: 0,
     score: 0,
-    gravatarEmail: '',
-    email: 'email@email.com'
+    gravatarEmail: 'email@email.com',
   },
 };
 
@@ -113,36 +111,25 @@ describe('Testa a tela de Login', () => {
   // });
   
   // it('Testa se ao clicar no botão de Play o token é salvo no local storage', () => {
-  //   renderWithRouterAndRedux(<App />)
-    
-  //   const btnPlay = screen.getByRole('button', { name: /play/i });
-  //   const inputEmail = screen.getByTestId('input-gravatar-email');
-  //   const inputName = screen.getByTestId('input-player-name');
-
-  //   act(() => {userEvent.type(inputEmail, validEmail)});
-  //   act(() => {userEvent.type(inputName, validName)});
-  //   act(() => {userEvent.click(btnPlay)})
-
-  //   expect()
-  // });
-
-  // it('', () => {});
-
-  // it('Testa se ao clicar no botão de Play o nome e email são salvos no estado global', async () => {
-  //   const { history } = renderWithRouterAndRedux(<App />, {player: mockPlayer}, '/game')
-    
-  //   console.log(history.location);
-    
-  //   await waitFor(() => {
-  //     console.log(store.getState());
-  //     expect(store.getState().player.email).toBe(validEmail)
-  //   })
-
-  //   await waitFor(() => {
-  //     expect(store.getState().player.name).toBe(validName)
-  //   })
 
   // });
+
+  it('Testa se ao clicar no botão de Play o nome e email são salvos no estado global', async () => {
+    const { history, store } = renderWithRouterAndRedux(<App />, mockPlayer, '/game')
+    
+    console.log(mockPlayer);
+    console.log(history.location);
+    
+    await waitFor(() => {
+      console.log(store.getState());
+      expect(store.getState().player.gravatarEmail).toBe(validEmail)
+    })
+
+    await waitFor(() => {
+      expect(store.getState().player.name).toBe(validName)
+    })
+
+  });
 
   it('Testa se ao clicar no botão de Play é redirecionado para a rota /game', async () => {
     const { history } = renderWithRouterAndRedux(<App />)
@@ -160,6 +147,4 @@ describe('Testa a tela de Login', () => {
       expect(pathname).toBe('/game');
     })
   });
-
-
 });
