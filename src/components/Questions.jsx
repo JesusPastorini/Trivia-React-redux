@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import './Questions.css';
+import Timer from './Timer';
 
 class Questions extends Component {
   state = {
@@ -7,6 +8,8 @@ class Questions extends Component {
     currentQuestionIndex: 0,
     answered: false,
     answersColor: [], // Array para armazenar as cores das respostas
+    timeLeft: 30, // Tempo restante para responder
+    timeOut: false, // Tempo esgotado?
   };
 
   componentDidMount() {
@@ -28,6 +31,15 @@ class Questions extends Component {
     } catch (error) {
       console.error('Erro ao carregar perguntas:', error);
     }
+  };
+
+  // Funções que atualizam o state do timer. Serão passadas como props para o componente <Timer />
+  setTimeLeft = (time) => {
+    this.setState({ timeLeft: time });
+  };
+
+  setTimeOut = (time) => {
+    this.setState({ timeOut: time });
   };
 
   // Função para embaralhar as respostas
@@ -78,17 +90,30 @@ class Questions extends Component {
 
   // Função para renderizar a pergunta atual
   renderCurrentQuestion() {
-    const { questions, currentQuestionIndex, answered, answersColor } = this.state;
+    const {
+      questions,
+      currentQuestionIndex,
+      answered,
+      answersColor,
+      timeLeft,
+      timeOut,
+    } = this.state;
     const currentQuestion = questions[currentQuestionIndex];
 
     return (
       <div>
         <h2 data-testid="question-category">{currentQuestion.category}</h2>
         <p data-testid="question-text">{currentQuestion.question}</p>
+        <Timer
+          time={ timeLeft }
+          setTime={ this.setTimeLeft }
+          setOut={ this.setTimeOut }
+        />
         <div data-testid="answer-options">
           {currentQuestion.answers.map((answer, index) => (
             <button
               key={ index }
+              disabled={ timeOut }
               className={ answered ? answersColor[index] : '' }
               data-testid={ answer === currentQuestion.correct_answer
                 ? 'correct-answer' : `wrong-answer-${index}` }
