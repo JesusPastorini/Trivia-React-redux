@@ -7,6 +7,8 @@ class Questions extends Component {
     currentQuestionIndex: 0,
     answered: false,
     answersColor: [], // Array para armazenar as cores das respostas
+    buttonNext: true,
+    optQuest: false,
   };
 
   componentDidMount() {
@@ -61,24 +63,25 @@ class Questions extends Component {
       answered: true,
       answersColor,
     });
-    const noMagic = 1000;
     if (currentQuestionIndex < questions.length - 1) {
-      setTimeout(() => {
-        // Avançar para a próxima pergunta após um intervalo de tempo
-        this.setState((prevState) => ({
-          currentQuestionIndex: prevState.currentQuestionIndex + 1,
-          answered: false,
-          answersColor: [], // Limpar as cores das respostas
-        }));
-      }, noMagic);
-    } else {
-      console.log('Fim do jogo');
+      this.setState({ optQuest: true, buttonNext: false });
     }
+  };
+
+  next = () => {
+    this.setState((prevState) => ({
+      currentQuestionIndex: prevState.currentQuestionIndex + 1,
+      answered: false,
+      answersColor: [], // Limpar as cores das respostas
+      optQuest: false,
+      buttonNext: true,
+    }));
   };
 
   // Função para renderizar a pergunta atual
   renderCurrentQuestion() {
-    const { questions, currentQuestionIndex, answered, answersColor } = this.state;
+    const { questions, currentQuestionIndex,
+      answered, answersColor, buttonNext, optQuest } = this.state;
     const currentQuestion = questions[currentQuestionIndex];
 
     return (
@@ -88,6 +91,7 @@ class Questions extends Component {
         <div data-testid="answer-options">
           {currentQuestion.answers.map((answer, index) => (
             <button
+              disabled={ optQuest }
               key={ index }
               className={ answered ? answersColor[index] : '' }
               data-testid={ answer === currentQuestion.correct_answer
@@ -98,6 +102,14 @@ class Questions extends Component {
             </button>
           ))}
         </div>
+        { buttonNext === false ? (
+          <button
+            data-testid="btn-next"
+            disabled={ buttonNext }
+            onClick={ this.next }
+          >
+            Próxima pergunta:
+          </button>) : null }
       </div>
     );
   }
