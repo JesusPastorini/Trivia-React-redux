@@ -1,7 +1,18 @@
 body {
   box-sizing: border-box;
   margin: 0;
+  display: flex;
   padding: 0;
+  justify-content: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 60%;
+  justify-content: space-between;
+  padding-top: 50px;
 }
 
 .App {
