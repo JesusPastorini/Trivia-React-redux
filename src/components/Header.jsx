@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 
 class Header extends Component {
   render() {
-    const { email, name, score } = this.props;
-    const hashEmail = md5(email).toString();
+    const { gravatarEmail, name, score } = this.props;
+    const hashEmail = md5(gravatarEmail).toString();
 
     return (
       <main>
@@ -24,13 +24,13 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  email: PropTypes.string.isRequired,
+  gravatarEmail: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  email: state.player.email,
+  gravatarEmail: state.player.gravatarEmail,
   name: state.player.name,
   score: state.player.score,
 });
