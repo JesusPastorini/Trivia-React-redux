@@ -115,11 +115,8 @@ describe('Testa a tela de Login', () => {
   // });
 
   it('Testa se ao clicar no botão de Play o nome e email são salvos no estado global', async () => {
-    const { history, store } = renderWithRouterAndRedux(<App />, mockPlayer, '/game')
-    
-    console.log(mockPlayer);
-    console.log(history.location);
-    
+    const { store } = renderWithRouterAndRedux(<App />, mockPlayer, '/game')
+        
     await waitFor(() => {
       console.log(store.getState());
       expect(store.getState().player.gravatarEmail).toBe(validEmail)
@@ -133,7 +130,7 @@ describe('Testa a tela de Login', () => {
 
   it('Testa se ao clicar no botão de Play é redirecionado para a rota /game', async () => {
     const { history } = renderWithRouterAndRedux(<App />)
-    
+  
     const btnPlay = screen.getByRole('button', { name: /play/i });
     const inputEmail = screen.getByTestId('input-gravatar-email');
     const inputName = screen.getByTestId('input-player-name');
