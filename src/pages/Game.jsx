@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Questions from '../components/Questions';
+import Header from '../components/Header';
 
 class Game extends Component {
   componentDidMount() {
@@ -19,9 +20,7 @@ class Game extends Component {
   render() {
     return (
       <div>
-        <header>
-          nome e email
-        </header>
+        <Header />
         <Questions />
       </div>
     );
