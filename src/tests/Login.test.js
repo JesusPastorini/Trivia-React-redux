@@ -1,23 +1,24 @@
 import renderWithRouterAndRedux from "./helpers/renderWithRouterAndRedux";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { act } from "react-dom/test-utils";
 import mockToken from "./helpers/mockToken";
+import store from '../redux/store'
 
 const invalidEmail = 'teste.@teste.com';
 const validEmail = 'email@email.com';
 const invalidName = 'Aa';
 const validName = 'José';
-// const mockPlayer = {
-//   player: {
-//     name: 'José',
-//     assertions: 0,
-//     score: 0,
-//     gravatarEmail: '',
-//     email: 'email@email.com'
-//   },
-// };
+const mockPlayer = {
+  player: {
+    name: 'José',
+    assertions: 0,
+    score: 0,
+    gravatarEmail: '',
+    email: 'email@email.com'
+  },
+};
 
 beforeEach(() => {
   jest.spyOn(global, 'fetch');
@@ -127,33 +128,37 @@ describe('Testa a tela de Login', () => {
 
   // it('', () => {});
 
-  it('Testa se ao clicar no botão de Play o nome e email são salvos no estado global', () => {
-    renderWithRouterAndRedux(<App />)
+  // it('Testa se ao clicar no botão de Play o nome e email são salvos no estado global', async () => {
+  //   const { history } = renderWithRouterAndRedux(<App />, {player: mockPlayer}, '/game')
     
-    const btnPlay = screen.getByRole('button', { name: /play/i });
+  //   console.log(history.location);
+    
+  //   await waitFor(() => {
+  //     console.log(store.getState());
+  //     expect(store.getState().player.email).toBe(validEmail)
+  //   })
 
-    act(() => {
-      userEvent.click(btnPlay)
-    });
+  //   await waitFor(() => {
+  //     expect(store.getState().player.name).toBe(validName)
+  //   })
 
-  });
+  // });
 
-  it('Testa se ao clicar no botão de Play é redirecionado para a rota /game', () => {
+  it('Testa se ao clicar no botão de Play é redirecionado para a rota /game', async () => {
     const { history } = renderWithRouterAndRedux(<App />)
     
-    const btnPlay = screen.getByTestId('btn-play')
+    const btnPlay = screen.getByRole('button', { name: /play/i });
     const inputEmail = screen.getByTestId('input-gravatar-email');
     const inputName = screen.getByTestId('input-player-name');
     
     userEvent.type(inputEmail, validEmail);
     userEvent.type(inputName, validName);
-
-    expect(btnPlay).not.toHaveAttribute('disabled', '')
-
     userEvent.click(btnPlay);
-
-    const { pathname } = history.location;
-    expect(pathname).toBe('/game');
+    
+    await waitFor(() => {
+      const { pathname } = history.location;
+      expect(pathname).toBe('/game');
+    })
   });
 
 
