@@ -1,6 +1,9 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component } from 'react';
 import './Questions.css';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Timer from './Timer';
+import { incrSccore } from '../redux/actions';
 
 class Questions extends Component {
   state = {
@@ -68,10 +71,25 @@ class Questions extends Component {
       return '';
     });
 
+    if (isCorrect) {
+      // Somando placar em caso de resposta correta
+      const { timeLeft } = this.state;
+      const { difficulty } = currentQuestion;
+      const { dispatch } = this.props;
+      const basePoint = 10;
+      let difficultyBase = 1;
+      if (difficulty === 'hard') { difficultyBase += 2; }
+      if (difficulty === 'medium') { difficultyBase += 1; }
+      const points = basePoint + (timeLeft * difficultyBase);
+      dispatch(incrSccore(points));
+    }
+
     // Atualizar o estado com a resposta escolhida e as cores das respostas
     this.setState({
       answered: true,
       answersColor,
+      timeLeft: 30,
+      timeOut: false,
     });
     const noMagic = 1000;
     if (currentQuestionIndex < questions.length - 1) {
@@ -144,4 +162,8 @@ class Questions extends Component {
   }
 }
 
-export default Questions;
+Questions.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
+
+export default connect()(Questions);
