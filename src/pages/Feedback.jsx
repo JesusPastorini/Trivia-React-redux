@@ -1,7 +1,7 @@
 import React from 'react';
-import md5 from 'crypto-js/md5';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Header from '../components/Header';
 
 class Feedback extends React.Component {
   onClickButtonPlayAgain = () => {
@@ -15,21 +15,12 @@ class Feedback extends React.Component {
   };
 
   render() {
-    const { email, name, score } = this.props;
-    const hashEmail = md5(email).toString();
-
     const { assertions } = this.props;
     const low = 3;
 
     return (
       <div>
-        <img
-          data-testid="header-profile-picture"
-          src={ `https://www.gravatar.com/avatar/${hashEmail}` }
-          alt="profile-gravatar"
-        />
-        <p data-testid="header-player-name">{name}</p>
-        <p data-testid="header-score">{score}</p>
+        <Header />
 
         <p data-testid="feedback-text">
           { assertions < low ? 'Could be better...' : 'Well Done!' }
@@ -62,9 +53,6 @@ const mapStateToProps = (state) => ({
 
 Feedback.propTypes = {
   assertions: PropTypes.number.isRequired,
-  email: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  score: PropTypes.number.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,

@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import './Questions.css';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import Timer from './Timer';
+import { incrSccore } from '../redux/actions';
 
 class Questions extends Component {
   state = {
@@ -7,6 +11,8 @@ class Questions extends Component {
     currentQuestionIndex: 0,
     answered: false,
     answersColor: [], // Array para armazenar as cores das respostas
+    timeLeft: 30, // Tempo restante para responder
+    timeOut: false, // Tempo esgotado?
     buttonNext: true,
     optQuest: false,
   };
@@ -30,6 +36,15 @@ class Questions extends Component {
     } catch (error) {
       console.error('Erro ao carregar perguntas:', error);
     }
+  };
+
+  // Funções que atualizam o state do timer. Serão passadas como props para o componente <Timer />
+  setTimeLeft = (time) => {
+    this.setState({ timeLeft: time });
+  };
+
+  setTimeOut = (time) => {
+    this.setState({ timeOut: time });
   };
 
   // Função para embaralhar as respostas
@@ -58,10 +73,25 @@ class Questions extends Component {
       return '';
     });
 
+    if (isCorrect) {
+      // Somando placar em caso de resposta correta
+      const { timeLeft } = this.state;
+      const { difficulty } = currentQuestion;
+      const { dispatch } = this.props;
+      const basePoint = 10;
+      let difficultyBase = 1;
+      if (difficulty === 'hard') { difficultyBase += 2; }
+      if (difficulty === 'medium') { difficultyBase += 1; }
+      const points = basePoint + (timeLeft * difficultyBase);
+      dispatch(incrSccore(points));
+    }
+
     // Atualizar o estado com a resposta escolhida e as cores das respostas
     this.setState({
       answered: true,
       answersColor,
+      timeLeft: 30,
+      timeOut: false,
     });
     if (currentQuestionIndex < questions.length - 1) {
       this.setState({ optQuest: true, buttonNext: false });
@@ -80,19 +110,33 @@ class Questions extends Component {
 
   // Função para renderizar a pergunta atual
   renderCurrentQuestion() {
-    const { questions, currentQuestionIndex,
-      answered, answersColor, buttonNext, optQuest } = this.state;
+    const {
+      questions,
+      currentQuestionIndex,
+      answered,
+      answersColor,
+      timeLeft,
+      timeOut,
+      buttonNext,
+      optQuest,
+    } = this.state;
     const currentQuestion = questions[currentQuestionIndex];
 
     return (
       <div>
         <h2 data-testid="question-category">{currentQuestion.category}</h2>
         <p data-testid="question-text">{currentQuestion.question}</p>
+        <Timer
+          time={ timeLeft }
+          setTime={ this.setTimeLeft }
+          setOut={ this.setTimeOut }
+        />
         <div data-testid="answer-options">
           {currentQuestion.answers.map((answer, index) => (
             <button
               disabled={ optQuest }
               key={ index }
+              disabled={ timeOut }
               className={ answered ? answersColor[index] : '' }
               data-testid={ answer === currentQuestion.correct_answer
                 ? 'correct-answer' : `wrong-answer-${index}` }
@@ -131,4 +175,8 @@ class Questions extends Component {
   }
 }
 
-export default Questions;
+Questions.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
+
+export default connect()(Questions);
