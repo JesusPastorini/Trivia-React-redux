@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import './Questions.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -32,6 +33,10 @@ class Questions extends Component {
         answers: this.shuffleAnswers([...question.incorrect_answers,
           question.correct_answer]),
       }));// Une a opção correta com incorreta e envia para embaralhar
+      if (questions.length === 0) {
+        const { history } = this.props;
+        history.push('/');
+      }
       this.setState({ questions });
     } catch (error) {
       console.error('Erro ao carregar perguntas:', error);
@@ -65,14 +70,12 @@ class Questions extends Component {
 
     // Definir as cores das respostas com base na resposta escolhida
     const answersColor = currentQuestion.answers.map((a) => {
+      console.log(currentQuestion);
       if (a === currentQuestion.correct_answer) {
-        return isCorrect ? 'correct-answer' : '';
-      } if (a === answer) {
-        return 'wrong-answer';
+        return 'correct-answer';
       }
-      return '';
+      return 'wrong-answer';
     });
-
     if (isCorrect) {
       // Somando placar em caso de resposta correta
       const { timeLeft } = this.state;
@@ -177,6 +180,9 @@ class Questions extends Component {
 
 Questions.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
-export default connect()(Questions);
+export default connect()(withRouter(Questions));
