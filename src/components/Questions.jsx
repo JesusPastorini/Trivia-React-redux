@@ -4,7 +4,7 @@ import './Questions.css';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Timer from './Timer';
-import { incrSccore } from '../redux/actions';
+import { clearScore, incrSccore } from '../redux/actions';
 
 class Questions extends Component {
   state = {
@@ -20,6 +20,8 @@ class Questions extends Component {
 
   componentDidMount() {
     this.fetchApi();
+    const { dispatch } = this.props;
+    dispatch(clearScore());
   }
 
   // Função para fazer a requisição das perguntas da API

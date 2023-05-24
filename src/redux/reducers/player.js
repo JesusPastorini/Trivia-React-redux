@@ -1,4 +1,4 @@
-import { ADD_PLAYER_INFO, INCR_SCORE } from '../actions';
+import { ADD_PLAYER_INFO, INCR_SCORE, CLEAR_SCORE } from '../actions';
 
 const INITIAL_STATE = {
   name: '',
@@ -20,6 +20,11 @@ const player = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       score: state.score + action.payload,
+    };
+  case CLEAR_SCORE:
+    return {
+      ...state,
+      score: 0,
     };
   default:
     return state;
