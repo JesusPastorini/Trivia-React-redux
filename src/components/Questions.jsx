@@ -15,7 +15,7 @@ class Questions extends Component {
     timeLeft: 30, // Tempo restante para responder
     timeOut: false, // Tempo esgotado?
     buttonNext: true,
-    optQuest: false,
+    // optQuest: false,
   };
 
   componentDidMount() {
@@ -70,7 +70,6 @@ class Questions extends Component {
 
     // Definir as cores das respostas com base na resposta escolhida
     const answersColor = currentQuestion.answers.map((a) => {
-      console.log(currentQuestion);
       if (a === currentQuestion.correct_answer) {
         return 'correct-answer';
       }
@@ -97,7 +96,7 @@ class Questions extends Component {
       timeOut: false,
     });
     if (currentQuestionIndex < questions.length - 1) {
-      this.setState({ optQuest: true, buttonNext: false });
+      this.setState({ buttonNext: false });
     }
   };
 
@@ -106,9 +105,14 @@ class Questions extends Component {
       currentQuestionIndex: prevState.currentQuestionIndex + 1,
       answered: false,
       answersColor: [], // Limpar as cores das respostas
-      optQuest: false,
+      // optQuest: false,
       buttonNext: true,
     }));
+  };
+
+  handleClickButtonFeedback = () => {
+    const { history } = this.props;
+    history.push('/feedback');
   };
 
   // Função para renderizar a pergunta atual
@@ -121,10 +125,9 @@ class Questions extends Component {
       timeLeft,
       timeOut,
       buttonNext,
-      optQuest,
+      // optQuest,
     } = this.state;
     const currentQuestion = questions[currentQuestionIndex];
-
     return (
       <div>
         <h2 data-testid="question-category">{currentQuestion.category}</h2>
@@ -137,7 +140,7 @@ class Questions extends Component {
         <div data-testid="answer-options">
           {currentQuestion.answers.map((answer, index) => (
             <button
-              disabled={ optQuest }
+              // disabled={ optQuest }
               key={ index }
               disabled={ timeOut }
               className={ answered ? answersColor[index] : '' }
@@ -149,14 +152,34 @@ class Questions extends Component {
             </button>
           ))}
         </div>
-        { buttonNext === false ? (
-          <button
-            data-testid="btn-next"
-            disabled={ buttonNext }
-            onClick={ this.next }
-          >
-            Próxima pergunta:
-          </button>) : null }
+        {
+          !buttonNext ? (
+            <button
+              data-testid="btn-next"
+              disabled={ buttonNext }
+              onClick={ this.next }
+            >
+              Next
+            </button>
+          ) : (
+            null
+          )
+        }
+        <div>
+          {
+            (currentQuestionIndex === questions.length - 1 && answered) ? (
+              <button
+                type="button"
+                data-testid="btn-next"
+                onClick={ this.handleClickButtonFeedback }
+              >
+                Next
+              </button>
+            ) : (
+              null
+            )
+          }
+        </div>
       </div>
     );
   }
