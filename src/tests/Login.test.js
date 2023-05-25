@@ -118,7 +118,6 @@ describe('Testa a tela de Login', () => {
     const { store } = renderWithRouterAndRedux(<App />, mockPlayer, '/game')
         
     await waitFor(() => {
-      console.log(store.getState());
       expect(store.getState().player.gravatarEmail).toBe(validEmail)
     })
 

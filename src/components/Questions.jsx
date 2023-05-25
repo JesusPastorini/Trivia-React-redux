@@ -187,14 +187,12 @@ class Questions extends Component {
   }
 
   render() {
-    const { questions, currentQuestionIndex } = this.state;
+    const { questions } = this.state;
 
     let content;
 
     if (questions.length === 0) {
       content = <div>Loading...</div>;
-    } else if (currentQuestionIndex >= questions.length) {
-      content = <div>Game Over</div>;
     } else {
       content = this.renderCurrentQuestion();
     }
