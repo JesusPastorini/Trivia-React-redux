@@ -44,6 +44,7 @@ class Ranking extends Component {
     const { ranking } = this.state;
     return (
       <div>
+        <h2 data-testid="ranking-title">RANKING</h2>
         <ul>
           { ranking.map((player, index) => (
             <li key={ index }>

@@ -15,7 +15,7 @@ function Timer({ time, setTime, setOut }) {
       });
     }, ms);
     return () => clearInterval(interval);
-  }, []);
+  });
 
   return (
     <p>
