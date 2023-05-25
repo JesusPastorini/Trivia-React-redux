@@ -139,7 +139,7 @@ class Questions extends Component {
           setTime={ this.setTimeLeft }
           setOut={ this.setTimeOut }
         />
-        <div data-testid="answer-options">
+        <div data-testid="answer-options" className="answer-options">
           {currentQuestion.answers.map((answer, index) => (
             <button
               // disabled={ optQuest }
